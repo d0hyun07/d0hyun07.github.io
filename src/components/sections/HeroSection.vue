@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { personal } from '@/data/personal'
 import { useTypingAnimation } from '@/composables/useTypingAnimation'
 
@@ -7,6 +8,9 @@ const { displayText } = useTypingAnimation(personal.role, {
   deletingSpeed: 45,
   pauseAfterType: 1400,
 })
+
+// 단어 전환 순간(displayText === '')에도 높이를 유지하기 위한 텍스트
+const stableRoleText = computed(() => (displayText.value ? displayText.value : '\u00A0'))
 
 function scrollTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -37,7 +41,7 @@ function scrollTo(id: string) {
           </h1>
 
           <div class="hero-role">
-            <span aria-live="polite">{{ displayText }}</span>
+            <span aria-live="polite">{{ stableRoleText }}</span>
           </div>
 
           <p class="hero-lead">
@@ -158,6 +162,8 @@ function scrollTo(id: string) {
   letter-spacing: -0.02em;
   color: var(--ink-2);
   margin-top: 4px;
+  /* 타이핑 텍스트가 빈 값일 때도 레이아웃 점프 방지 */
+  min-height: 1.6em;
 }
 
 .hero-lead {
