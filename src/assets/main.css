@@ -1,0 +1,170 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================
+ * 디자인 시스템 CSS 변수
+ * ========================= */
+:root {
+  /* 배경 */
+  --color-bg:           #0a0a0f;
+  --color-surface:      #111118;
+  --color-surface-2:    #1a1a24;
+
+  /* 테두리 */
+  --color-border:       #1e1e2e;
+  --color-border-hover: #2e2e4e;
+
+  /* 액센트 */
+  --color-primary:      #00d4ff;
+  --color-primary-dim:  rgba(0, 212, 255, 0.15);
+  --color-secondary:    #7c3aed;
+
+  /* 텍스트 */
+  --color-text:         #e2e8f0;
+  --color-text-muted:   #64748b;
+  --color-text-dim:     #334155;
+
+  /* 상태 */
+  --color-success:      #22c55e;
+  --color-warning:      #f59e0b;
+  --color-error:        #ef4444;
+
+  /* 간격 */
+  --section-padding-y:  6rem;
+  --container-max:      1200px;
+
+  /* 반경 */
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-lg:    12px;
+  --radius-full:  9999px;
+
+  /* 전환 */
+  --transition-fast:  150ms ease;
+  --transition-base:  300ms ease;
+  --transition-slow:  500ms ease;
+}
+
+/* =========================
+ * 전역 기본 스타일
+ * ========================= */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-text);
+    line-height: 1.25;
+  }
+
+  ::selection {
+    background-color: var(--color-primary-dim);
+    color: var(--color-primary);
+  }
+
+  /* 키보드 포커스만 시각적으로 표시 */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* 다크 테마 스크롤바 */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-2);
+    border-radius: var(--radius-full);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-hover);
+  }
+}
+
+/* =========================
+ * 재사용 가능한 컴포넌트 클래스
+ * ========================= */
+@layer components {
+  /* 섹션 공통 컨테이너 */
+  .container-portfolio {
+    @apply mx-auto px-6;
+    max-width: var(--container-max);
+  }
+
+  /* 스크롤 진입 reveal 애니메이션 (useScrollReveal 와 연동) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* 타이핑 커서 */
+  .typing-cursor {
+    animation: blink 1s step-end infinite;
+  }
+
+  /* glow 효과 */
+  .glow-primary {
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+  }
+
+  /* 도트 그리드 배경 (Hero 등) */
+  .bg-dot-grid {
+    background-image: radial-gradient(var(--color-border) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+}
+
+/* =========================
+ * 키프레임
+ * ========================= */
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* =========================
+ * 모션 감소 설정 (접근성)
+ * ========================= */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
