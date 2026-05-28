@@ -2,7 +2,6 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 
 // GitHub Pages 배포 base 경로.
 //   - User/Org 사이트 (https://d0hyun07.github.io/)         → '/'
@@ -13,7 +12,7 @@ const BASE_PATH = '/'
 // https://vite.dev/config/
 export default defineConfig({
   base: BASE_PATH,
-  plugins: [vue(), vueDevTools()],
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
