@@ -8,6 +8,12 @@ const { displayText } = useTypingAnimation(personal.role, {
   deletingSpeed: 45,
   pauseAfterType: 1400,
 })
+
+function scrollToAbout() {
+  document
+    .getElementById('about')
+    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 </script>
 
 <template>
@@ -74,11 +80,7 @@ const { displayText } = useTypingAnimation(personal.role, {
       href="#about"
       class="absolute bottom-8 left-1/2 -translate-x-1/2 text-[var(--color-text-dim)] hover:text-[var(--color-primary)] transition-colors"
       aria-label="아래 About 섹션으로 스크롤"
-      @click.prevent="
-        document
-          .getElementById('about')
-          ?.scrollIntoView({ behavior: 'smooth' })
-      "
+      @click.prevent="scrollToAbout"
     >
       <div class="font-mono text-xs animate-bounce">scroll ↓</div>
     </a>

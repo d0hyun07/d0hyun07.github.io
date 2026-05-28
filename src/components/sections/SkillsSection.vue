@@ -63,7 +63,7 @@ const { isVisible, target } = useScrollReveal()
           :key="tab.key"
           type="button"
           role="tab"
-          :aria-selected="(activeTab === tab.key).toString()"
+          :aria-selected="activeTab === tab.key"
           :tabindex="activeTab === tab.key ? 0 : -1"
           class="px-4 py-2 font-mono text-xs md:text-sm rounded-full border transition-all duration-200"
           :class="

@@ -100,7 +100,7 @@ const { isVisible, target } = useScrollReveal()
           v-for="filter in filters"
           :key="filter.key"
           type="button"
-          :aria-pressed="(activeFilter === filter.key).toString()"
+          :aria-pressed="activeFilter === filter.key"
           class="px-4 py-2 font-mono text-xs md:text-sm rounded-full border transition-all duration-200"
           :class="
             activeFilter === filter.key
