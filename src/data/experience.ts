@@ -13,7 +13,7 @@ export const workExperience: Experience[] = [
   {
     id: 1,
     type: 'work',
-    period: '2025.10 - 현재',
+    period: '2025.9 - 현재',
     organization: '바질컴퍼니 (Vazil Company)',
     role: 'C/S팀 연구원',
     description: [
@@ -46,7 +46,7 @@ export const education: Experience[] = [
   {
     id: 1,
     type: 'education',
-    period: '2022.03 - 2025.02',
+    period: '2023.03 - 2026.01',
     organization: '부산소프트웨어마이스터고등학교',
     role: '소프트웨어개발과',
     description: [

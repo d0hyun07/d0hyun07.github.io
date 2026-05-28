@@ -46,73 +46,69 @@ const { isVisible, target } = useScrollReveal()
         </div>
       </div>
 
-      <!-- 탭 -->
-      <div
-        class="tabs"
-        role="tablist"
-        aria-label="경력 / 학력 탭"
-      >
-        <button
-          v-for="tab in tabs"
-          :key="tab.key"
-          type="button"
-          role="tab"
-          :aria-selected="activeTab === tab.key"
-          :tabindex="activeTab === tab.key ? 0 : -1"
-          class="tab"
-          :class="{ on: activeTab === tab.key }"
-          @click="handleSelect(tab.key)"
-        >
-          {{ tab.label }}
-        </button>
-      </div>
-
-      <!-- 타임라인 -->
-      <Transition name="fade" mode="out-in">
-        <ol
-          :key="activeTab"
-          class="timeline"
-          role="tabpanel"
-        >
-          <li
-            v-for="(item, i) in items"
-            :key="item.id"
-            :style="{ transitionDelay: `${i * 100}ms` }"
-            class="tl-item reveal"
-            :class="{ visible: isVisible }"
+      <div class="exp-area">
+        <!-- 탭 -->
+        <div class="tabs" role="tablist" aria-label="경력 / 학력 탭">
+          <button
+            v-for="tab in tabs"
+            :key="tab.key"
+            type="button"
+            role="tab"
+            :aria-selected="activeTab === tab.key"
+            :tabindex="activeTab === tab.key ? 0 : -1"
+            class="tab"
+            :class="{ on: activeTab === tab.key }"
+            @click="handleSelect(tab.key)"
           >
-            <!-- 기간 -->
-            <div class="tl-period">{{ item.period }}</div>
+            {{ tab.label }}
+          </button>
+        </div>
 
-            <!-- 기관 + 역할 -->
-            <div class="tl-role">{{ item.organization }}</div>
-            <div class="tl-where">{{ item.role }}</div>
+        <!-- 타임라인 -->
+        <Transition name="fade" mode="out-in">
+          <ol :key="activeTab" class="timeline" role="tabpanel">
+            <li
+              v-for="(item, i) in items"
+              :key="item.id"
+              :style="{ transitionDelay: `${i * 100}ms` }"
+              class="tl-item reveal"
+              :class="{ visible: isVisible }"
+            >
+              <div class="tl-period">{{ item.period }}</div>
+              <div class="tl-role">{{ item.organization }}</div>
+              <div class="tl-where">{{ item.role }}</div>
 
-            <!-- 업무 / 활동 목록 -->
-            <div class="tl-body">
-              <ul>
-                <li v-for="(line, idx) in item.description" :key="idx">{{ line }}</li>
-              </ul>
+              <div class="tl-body">
+                <ul>
+                  <li v-for="(line, idx) in item.description" :key="idx">{{ line }}</li>
+                </ul>
 
-              <div v-if="item.tags && item.tags.length > 0" class="tl-tags">
-                <span v-for="tag in item.tags" :key="tag">{{ tag }}</span>
+                <div v-if="item.tags && item.tags.length > 0" class="tl-tags">
+                  <span v-for="tag in item.tags" :key="tag">{{ tag }}</span>
+                </div>
               </div>
-            </div>
-          </li>
+            </li>
 
-          <li
-            v-if="items.length === 0"
-            class="empty"
-          >
-            // 아직 등록된 항목이 없습니다.
-          </li>
-        </ol>
-      </Transition>
+            <li v-if="items.length === 0" class="empty">
+              // 아직 등록된 항목이 없습니다.
+            </li>
+          </ol>
+        </Transition>
+      </div>
     </div>
   </section>
 </template>
 
 <style scoped>
+.exp-area {
+  grid-column: 4 / span 9;
+}
+@media (max-width: 900px) {
+  .exp-area {
+    grid-column: 1 / -1;
+  }
+}
+
 .tabs {
   display: inline-flex;
   gap: 2px;

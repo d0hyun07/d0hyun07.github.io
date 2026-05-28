@@ -168,8 +168,19 @@ const { isVisible, target } = useScrollReveal()
 </template>
 
 <style scoped>
+.filters,
 .work-area {
-  grid-column: 1 / -1;
+  grid-column: 4 / span 9;
+}
+
+@media (max-width: 900px) {
+  .filters,
+  .work-area {
+    grid-column: 1 / -1;
+  }
+}
+
+.work-area {
 }
 
 .filters {

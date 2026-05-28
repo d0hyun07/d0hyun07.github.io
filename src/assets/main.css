@@ -7,20 +7,21 @@
  * ========================= */
 :root {
   /* Editorial light theme (ref: 포트폴리오 사이트/portfolio.html) */
-  --bg: #f4f2ec;
-  --bg-2: #ece8de;
-  --bg-card: #fbfaf6;
+  /* Updated palette: modern cool (avoid Claude-like warm beige) */
+  --bg: #f7f7f2;
+  --bg-2: #eef0f4;
+  --bg-card: #ffffff;
 
-  --ink: #14130f;
-  --ink-2: #2a2823;
-  --muted: #6b665b;
-  --muted-2: #9a9488;
+  --ink: #0f172a;
+  --ink-2: #1f2937;
+  --muted: #475569;
+  --muted-2: #64748b;
 
-  --line: #dcd7c8;
-  --line-strong: #bfb8a4;
+  --line: #d1d5db;
+  --line-strong: #9ca3af;
 
-  --accent: #b14a2a;
-  --accent-soft: #e9d9cf;
+  --accent: #2563eb;
+  --accent-soft: #dbeafe;
 
   --sans: 'Pretendard', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
