@@ -39,26 +39,26 @@ export const skills: Skill[] = [
   { name: 'PyTorch', category: 'backend', level: 75 },
   { name: 'TensorFlow', category: 'backend', level: 65 },
   { name: 'OpenCV', category: 'backend', level: 70 },
+  { name: 'Teamcenter', category: 'backend', level: 65 },
+  { name: 'SOA Client', category: 'backend', level: 65 },
+  { name: 'ITK (Integration Toolkit)', category: 'backend', level: 65 },
 
   // ──────────── Embedded / Robotics ────────────
   { name: 'C / C++', category: 'embedded', level: 70 },
   { name: 'STM32', category: 'embedded', level: 65 },
-  { name: 'Arduino', category: 'embedded', level: 80 },
-  { name: 'Raspberry Pi', category: 'embedded', level: 80 },
   { name: 'UART / I2C / ADC', category: 'embedded', level: 70 },
   { name: 'ROS2 (Humble)', category: 'embedded', level: 75 },
   { name: 'Isaac Sim', category: 'embedded', level: 75 },
   { name: 'Isaac Lab', category: 'embedded', level: 75 },
   { name: 'OPC UA', category: 'embedded', level: 70 },
   { name: 'Gazebo', category: 'embedded', level: 60 },
-  { name: 'Fusion 360', category: 'embedded', level: 85 },
 
   // ──────────── DevOps / Infra ────────────
-  { name: 'Git / GitHub', category: 'devops', level: 80 },
-  { name: 'Docker', category: 'devops', level: 70 },
+  { name: 'Git / GitHub', category: 'devops', level: 90 },
+  { name: 'Docker', category: 'devops', level: 85 },
   { name: 'nginx', category: 'devops', level: 60 },
   { name: 'GitHub Actions', category: 'devops', level: 60 },
-  { name: 'AWS (S3 · CloudFront · EC2)', category: 'devops', level: 60 },
+  { name: 'AWS (S3 · CloudFront · EC2)', category: 'devops', level: 85 },
   { name: 'EAS Build / Submit', category: 'devops', level: 70 },
 
   // ──────────── Security / Active Directory ────────────
