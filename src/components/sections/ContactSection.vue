@@ -114,9 +114,8 @@ const inputClass = computed(() => [
 
       <div class="contact-left">
         <div class="contact-big">
-          함께 만들고 싶은<br />
-          것이 있다면<br />
-          <span class="accent">편하게 말해주세요.</span>
+          <span class="line">함께 만들고 싶은 것이 있다면</span>
+          <span class="line"><span class="accent">편하게 말해주세요.</span></span>
         </div>
         <p class="contact-sub">보통 24시간 안에 답장드립니다. 짧은 메모도 좋아요.</p>
 
@@ -242,6 +241,10 @@ const inputClass = computed(() => [
   word-break: keep-all;
   overflow-wrap: normal;
   hyphens: none;
+  max-width: 10.5em;
+}
+.contact-big .line {
+  display: block;
 }
 .contact-big .accent {
   color: var(--accent);
