@@ -235,10 +235,13 @@ const inputClass = computed(() => [
 
 .contact-big {
   font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
   font-size: clamp(48px, 7vw, 96px);
   color: var(--ink);
+  word-break: keep-all;
+  overflow-wrap: normal;
+  hyphens: none;
 }
 .contact-big .accent {
   color: var(--accent);
