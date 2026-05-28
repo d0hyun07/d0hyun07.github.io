@@ -32,7 +32,7 @@ const { isVisible, target } = useScrollReveal()
           </div>
           <div class="row">
             <div class="label">Born</div>
-            <div class="val">2006 · 부산</div>
+            <div class="val">2007 · 01 · 24</div>
           </div>
           <div class="row">
             <div class="label">Role</div>

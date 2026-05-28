@@ -218,10 +218,10 @@ const inputClass = computed(() => [
 
 <style scoped>
 .contact-left {
-  grid-column: 1 / span 6;
+  grid-column: 4 / span 5;
 }
 .contact-right {
-  grid-column: 8 / span 5;
+  grid-column: 9 / span 4;
 }
 @media (max-width: 900px) {
   .contact-left,
