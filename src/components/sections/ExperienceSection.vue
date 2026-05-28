@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import SectionTitle from '@/components/ui/SectionTitle.vue'
-import BaseBadge from '@/components/ui/BaseBadge.vue'
 import { experience } from '@/data/experience'
 import type { ExperienceType } from '@/types'
 import { useScrollReveal } from '@/composables/useScrollReveal'
@@ -33,20 +31,24 @@ const { isVisible, target } = useScrollReveal()
   <section
     id="experience"
     ref="target"
-    class="py-24 bg-[var(--color-surface)]/30 reveal"
+    class="section reveal"
     :class="{ visible: isVisible }"
     aria-labelledby="experience-title"
   >
-    <div class="container-portfolio">
-      <SectionTitle
-        id="experience-title"
-        title="Experience"
-        subtitle="시간 순으로 정리한 경력과 학력입니다."
-      />
+    <div class="page">
+      <div class="sec-head">
+        <div class="sec-num-col">
+          <div class="sec-num"><span class="sec-dot" /> 04 — TIMELINE</div>
+        </div>
+        <div class="sec-title-col">
+          <h2 id="experience-title" class="sec-title">경력 · 학력</h2>
+          <p class="sec-sub">시간 순으로 정리한 발자취입니다.</p>
+        </div>
+      </div>
 
       <!-- 탭 -->
       <div
-        class="flex gap-2 mb-12"
+        class="tabs"
         role="tablist"
         aria-label="경력 / 학력 탭"
       >
@@ -57,12 +59,8 @@ const { isVisible, target } = useScrollReveal()
           role="tab"
           :aria-selected="activeTab === tab.key"
           :tabindex="activeTab === tab.key ? 0 : -1"
-          class="px-6 py-2.5 font-mono text-sm rounded-full border transition-all duration-200"
-          :class="
-            activeTab === tab.key
-              ? 'bg-[var(--color-primary)] text-[var(--color-bg)] border-[var(--color-primary)]'
-              : 'border-[var(--color-border)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]'
-          "
+          class="tab"
+          :class="{ on: activeTab === tab.key }"
           @click="handleSelect(tab.key)"
         >
           {{ tab.label }}
@@ -73,69 +71,38 @@ const { isVisible, target } = useScrollReveal()
       <Transition name="fade" mode="out-in">
         <ol
           :key="activeTab"
-          class="relative max-w-3xl ml-4 md:ml-8 border-l-2 border-[var(--color-border)] space-y-10"
+          class="timeline"
           role="tabpanel"
         >
           <li
             v-for="(item, i) in items"
             :key="item.id"
             :style="{ transitionDelay: `${i * 100}ms` }"
-            class="relative pl-6 md:pl-10 reveal"
+            class="tl-item reveal"
             :class="{ visible: isVisible }"
           >
-            <!-- 마커 -->
-            <span
-              class="absolute -left-[10px] top-1.5 w-4 h-4 rounded-full bg-[var(--color-primary)] ring-4 ring-[var(--color-primary-dim)]"
-              aria-hidden="true"
-            />
-
             <!-- 기간 -->
-            <p
-              class="font-mono text-xs md:text-sm text-[var(--color-primary)] mb-1.5"
-            >
-              {{ item.period }}
-            </p>
+            <div class="tl-period">{{ item.period }}</div>
 
             <!-- 기관 + 역할 -->
-            <h3
-              class="font-mono text-lg md:text-xl font-semibold text-[var(--color-text)]"
-            >
-              {{ item.organization }}
-            </h3>
-            <p
-              class="font-mono text-sm text-[var(--color-text-muted)] mb-4"
-            >
-              {{ item.role }}
-            </p>
+            <div class="tl-role">{{ item.organization }}</div>
+            <div class="tl-where">{{ item.role }}</div>
 
             <!-- 업무 / 활동 목록 -->
-            <ul
-              class="list-disc list-outside ml-5 space-y-1.5 text-sm md:text-base text-[var(--color-text)] leading-relaxed marker:text-[var(--color-primary)]"
-            >
-              <li v-for="(line, idx) in item.description" :key="idx">
-                {{ line }}
-              </li>
-            </ul>
+            <div class="tl-body">
+              <ul>
+                <li v-for="(line, idx) in item.description" :key="idx">{{ line }}</li>
+              </ul>
 
-            <!-- 사용 기술 -->
-            <div
-              v-if="item.tags && item.tags.length > 0"
-              class="flex flex-wrap gap-1.5 mt-4"
-            >
-              <BaseBadge
-                v-for="tag in item.tags"
-                :key="tag"
-                variant="muted"
-                size="sm"
-              >
-                {{ tag }}
-              </BaseBadge>
+              <div v-if="item.tags && item.tags.length > 0" class="tl-tags">
+                <span v-for="tag in item.tags" :key="tag">{{ tag }}</span>
+              </div>
             </div>
           </li>
 
           <li
             v-if="items.length === 0"
-            class="pl-6 md:pl-10 font-mono text-sm text-[var(--color-text-muted)]"
+            class="empty"
           >
             // 아직 등록된 항목이 없습니다.
           </li>
@@ -146,6 +113,126 @@ const { isVisible, target } = useScrollReveal()
 </template>
 
 <style scoped>
+.tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  margin-bottom: 36px;
+}
+.tab {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  padding: 9px 20px;
+  border-radius: 999px;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+.tab.on {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  max-width: 920px;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--line-strong);
+}
+
+.tl-item {
+  position: relative;
+  padding: 0 0 48px;
+}
+.tl-item:last-child {
+  padding-bottom: 0;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -32px;
+  top: 9px;
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--ink);
+}
+
+.tl-period {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.tl-role {
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  color: var(--ink);
+}
+.tl-where {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+.tl-body {
+  margin-top: 16px;
+}
+.tl-body ul {
+  list-style: none;
+}
+.tl-body li {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  padding: 4px 0 4px 18px;
+  position: relative;
+  letter-spacing: -0.005em;
+}
+.tl-body li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--muted-2);
+}
+.tl-tags {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.tl-tags span {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+  padding: 3px 9px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+}
+
+.empty {
+  padding: 12px 0 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;

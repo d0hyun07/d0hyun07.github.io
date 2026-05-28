@@ -1,38 +1,45 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import SectionTitle from '@/components/ui/SectionTitle.vue'
-import BaseCard from '@/components/ui/BaseCard.vue'
+import { computed } from 'vue'
 import { skills } from '@/data/skills'
-import type { SkillCategory } from '@/types'
 import { useScrollReveal } from '@/composables/useScrollReveal'
 
-type TabKey = 'all' | SkillCategory
+type SkillGroupKey = 'frontend' | 'backend' | 'robotics' | 'infra'
 
-interface Tab {
-  key: TabKey
-  label: string
+interface SkillGroup {
+  key: SkillGroupKey
+  title: string
+  cat: string
+  items: { name: string; lvl: string }[]
 }
 
-const tabs: Tab[] = [
-  { key: 'all', label: 'All' },
-  { key: 'frontend', label: 'Frontend' },
-  { key: 'backend', label: 'Backend' },
-  { key: 'security', label: 'Security · AD' },
-  { key: 'embedded', label: 'Embedded · Robotics' },
-  { key: 'devops', label: 'DevOps' },
-]
-
-const activeTab = ref<TabKey>('all')
-
-const filteredSkills = computed(() =>
-  activeTab.value === 'all'
-    ? skills
-    : skills.filter((s) => s.category === activeTab.value),
-)
-
-function handleSelect(key: TabKey) {
-  activeTab.value = key
+function levelLabel(level?: number): string {
+  if (typeof level !== 'number') return '—'
+  if (level >= 85) return 'Daily'
+  if (level >= 70) return 'Proficient'
+  if (level >= 55) return 'Familiar'
+  return 'Learning'
 }
+
+const grouped = computed<SkillGroup[]>(() => {
+  const frontend = skills.filter((s) => s.category === 'frontend')
+  const backend = skills.filter((s) => s.category === 'backend')
+  const robotics = skills.filter((s) => s.category === 'embedded')
+  const infra = skills.filter((s) => s.category === 'devops' || s.category === 'security')
+
+  const mapItems = (list: typeof skills) =>
+    list
+      .slice()
+      .sort((a, b) => (b.level ?? 0) - (a.level ?? 0))
+      .slice(0, 10)
+      .map((s) => ({ name: s.name, lvl: levelLabel(s.level) }))
+
+  return [
+    { key: 'frontend', title: 'Frontend', cat: 'Interfaces', items: mapItems(frontend) },
+    { key: 'backend', title: 'Backend', cat: 'Services', items: mapItems(backend) },
+    { key: 'robotics', title: 'Robotics · AI', cat: 'Embedded', items: mapItems(robotics) },
+    { key: 'infra', title: 'Infrastructure', cat: 'Ops', items: mapItems(infra) },
+  ]
+})
 
 const { isVisible, target } = useScrollReveal()
 </script>
@@ -41,106 +48,103 @@ const { isVisible, target } = useScrollReveal()
   <section
     id="skills"
     ref="target"
-    class="py-24 bg-[var(--color-surface)]/30 reveal"
+    class="section reveal"
     :class="{ visible: isVisible }"
     aria-labelledby="skills-title"
   >
-    <div class="container-portfolio">
-      <SectionTitle
-        id="skills-title"
-        title="Skills"
-        subtitle="실무·프로젝트에서 직접 사용해 본 기술 스택입니다."
-      />
-
-      <!-- 카테고리 탭 -->
-      <div
-        class="flex flex-wrap gap-2 mb-10"
-        role="tablist"
-        aria-label="스킬 카테고리"
-      >
-        <button
-          v-for="tab in tabs"
-          :key="tab.key"
-          type="button"
-          role="tab"
-          :aria-selected="activeTab === tab.key"
-          :tabindex="activeTab === tab.key ? 0 : -1"
-          class="px-4 py-2 font-mono text-xs md:text-sm rounded-full border transition-all duration-200"
-          :class="
-            activeTab === tab.key
-              ? 'bg-[var(--color-primary)] text-[var(--color-bg)] border-[var(--color-primary)]'
-              : 'border-[var(--color-border)] text-[var(--color-text-muted)] hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]'
-          "
-          @click="handleSelect(tab.key)"
-        >
-          {{ tab.label }}
-        </button>
+    <div class="page">
+      <div class="sec-head">
+        <div class="sec-num-col">
+          <div class="sec-num"><span class="sec-dot" /> 03 — TOOLKIT</div>
+        </div>
+        <div class="sec-title-col">
+          <h2 id="skills-title" class="sec-title">기술 스택</h2>
+          <p class="sec-sub">실무·프로젝트에서 직접 사용해 본 도구들입니다.</p>
+        </div>
       </div>
 
-      <!-- 스킬 카드 그리드 -->
-      <Transition name="fade" mode="out-in">
+      <div class="skills-grid">
         <div
-          :key="activeTab"
-          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-          role="tabpanel"
+          v-for="(g, i) in grouped"
+          :key="g.key"
+          class="skill-group reveal"
+          :class="{ visible: isVisible }"
+          :style="{ transitionDelay: `${Math.min(i * 80, 240)}ms` }"
         >
-          <BaseCard
-            v-for="(skill, i) in filteredSkills"
-            :key="`${skill.category}-${skill.name}`"
-            padding="md"
-            :style="{ transitionDelay: `${Math.min(i * 40, 400)}ms` }"
-            class="reveal"
-            :class="{ visible: isVisible }"
-          >
-            <h3
-              class="font-mono text-sm md:text-base text-[var(--color-text)] mb-2"
-            >
-              {{ skill.name }}
-            </h3>
-
-            <p
-              class="font-mono text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-3"
-            >
-              {{ skill.category }}
-            </p>
-
-            <!-- 숙련도 바 -->
-            <div
-              v-if="typeof skill.level === 'number'"
-              class="w-full h-1.5 bg-[var(--color-surface-2)] rounded-full overflow-hidden"
-              role="progressbar"
-              :aria-valuenow="skill.level"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              :aria-label="`${skill.name} 숙련도`"
-            >
-              <div
-                class="h-full bg-[var(--color-primary)] rounded-full transition-all duration-700"
-                :style="{ width: isVisible ? `${skill.level}%` : '0%' }"
-              />
-            </div>
-          </BaseCard>
-
-          <!-- 카테고리에 항목이 없을 때 -->
-          <p
-            v-if="filteredSkills.length === 0"
-            class="col-span-full text-center font-mono text-sm text-[var(--color-text-muted)] py-12"
-          >
-            // 이 카테고리는 아직 정리 중입니다.
-          </p>
+          <div class="cat">{{ g.cat }}</div>
+          <h3>{{ g.title }}</h3>
+          <ul>
+            <li v-for="it in g.items" :key="it.name">
+              <span>{{ it.name }}</span>
+              <span class="lvl">{{ it.lvl }}</span>
+            </li>
+          </ul>
         </div>
-      </Transition>
+      </div>
     </div>
   </section>
 </template>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
+.skills-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
 }
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+@media (max-width: 900px) {
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.skill-group {
+  background: var(--bg);
+  padding: 30px 26px;
+}
+.cat {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+h3 {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+ul {
+  list-style: none;
+}
+li {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  padding: 9px 0;
+  border-bottom: 1px dashed var(--line);
+  letter-spacing: -0.005em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+li:last-child {
+  border-bottom: 0;
+}
+.lvl {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted-2);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 </style>

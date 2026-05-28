@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import SectionTitle from '@/components/ui/SectionTitle.vue'
-import BaseBadge from '@/components/ui/BaseBadge.vue'
 import { personal } from '@/data/personal'
 import { useScrollReveal } from '@/composables/useScrollReveal'
 
@@ -11,111 +9,125 @@ const { isVisible, target } = useScrollReveal()
   <section
     id="about"
     ref="target"
-    class="py-24 reveal"
+    class="section reveal"
     :class="{ visible: isVisible }"
     aria-labelledby="about-title"
   >
-    <div class="container-portfolio">
-      <SectionTitle
-        id="about-title"
-        title="About Me"
-        subtitle="저를 짧게 소개합니다."
-      />
+    <div class="page">
+      <div class="sec-head">
+        <div class="sec-num-col">
+          <div class="sec-num"><span class="sec-dot" /> 01 — ABOUT</div>
+        </div>
+        <div class="sec-title-col">
+          <h2 id="about-title" class="sec-title">소개</h2>
+          <p class="sec-sub">하드웨어와 소프트웨어 사이를 오가며 일해온 개발자입니다.</p>
+        </div>
+      </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-10 md:gap-14 items-start">
-        <!-- 프로필 영역 -->
-        <div class="flex flex-col items-center md:items-start">
-          <!-- 프로필 이미지 (없으면 placeholder) -->
-          <div
-            v-if="personal.profileImage"
-            class="w-44 h-44 md:w-60 md:h-60 rounded-lg overflow-hidden border border-[var(--color-border)] glow-primary"
-          >
-            <img
-              :src="personal.profileImage"
-              :alt="`${personal.name} 프로필 사진`"
-              class="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-              width="240"
-              height="240"
-            />
+      <div class="about-side-col">
+        <div class="about-side">
+          <div class="row">
+            <div class="label">Name</div>
+            <div class="val">{{ personal.name }}</div>
           </div>
-          <div
-            v-else
-            class="w-44 h-44 md:w-60 md:h-60 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] flex items-center justify-center"
-            role="img"
-            :aria-label="`${personal.name} 프로필 자리표시자`"
-          >
-            <span
-              class="font-mono text-6xl text-[var(--color-primary)] opacity-80"
-            >
-              {{ personal.name.slice(0, 1) }}
-            </span>
+          <div class="row">
+            <div class="label">Born</div>
+            <div class="val">2006 · 부산</div>
           </div>
+          <div class="row">
+            <div class="label">Role</div>
+            <div class="val">{{ personal.role[0] }}</div>
+          </div>
+          <div class="row">
+            <div class="label">Email</div>
+            <div class="val">{{ personal.email }}</div>
+          </div>
+          <div class="row">
+            <div class="label">GitHub</div>
+            <div class="val">
+              <a :href="personal.github" target="_blank" rel="noreferrer">
+                {{ personal.github.replace(/^https?:\/\//, '') }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
 
-          <!-- 빠른 정보 카드 -->
-          <dl
-            class="mt-6 w-full text-sm font-mono space-y-2 text-[var(--color-text-muted)]"
+      <div class="about-body-col">
+        <div class="prose">
+          <p
+            v-for="(paragraph, i) in personal.description"
+            :key="i"
+            :style="{ transitionDelay: `${i * 80}ms` }"
+            class="reveal"
+            :class="{ visible: isVisible }"
           >
-            <div class="flex gap-2">
-              <dt class="text-[var(--color-primary)]">name</dt>
-              <dd>{{ personal.name }}</dd>
-            </div>
-            <div class="flex gap-2">
-              <dt class="text-[var(--color-primary)]">email</dt>
-              <dd class="break-all">{{ personal.email }}</dd>
-            </div>
-            <div class="flex gap-2">
-              <dt class="text-[var(--color-primary)]">github</dt>
-              <dd>
-                <a
-                  :href="personal.github"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="hover:text-[var(--color-primary)] transition-colors"
-                >
-                  {{ personal.github.replace(/^https?:\/\//, '') }}
-                </a>
-              </dd>
-            </div>
-          </dl>
+            {{ paragraph }}
+          </p>
         </div>
 
-        <!-- 자기소개 -->
-        <div>
-          <div class="space-y-5 text-base text-[var(--color-text)] leading-relaxed">
-            <p
-              v-for="(paragraph, i) in personal.description"
-              :key="i"
-              :style="{ transitionDelay: `${i * 80}ms` }"
-              class="reveal"
-              :class="{ visible: isVisible }"
-            >
-              {{ paragraph }}
-            </p>
-          </div>
-
-          <!-- 관심 분야 배지 -->
-          <div class="mt-8">
-            <h3
-              class="font-mono text-sm text-[var(--color-text-muted)] mb-3 uppercase tracking-wider"
-            >
-              관심 분야
-            </h3>
-            <div class="flex flex-wrap gap-2">
-              <BaseBadge
-                v-for="(interest, i) in personal.interests"
-                :key="interest"
-                :style="{ transitionDelay: `${i * 60}ms` }"
-                class="reveal"
-                :class="{ visible: isVisible }"
-              >
-                {{ interest }}
-              </BaseBadge>
-            </div>
-          </div>
+        <div class="focus">
+          <span v-for="interest in personal.interests" :key="interest" class="chip">
+            {{ interest }}
+          </span>
         </div>
       </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+.about-side-col {
+  grid-column: 1 / span 3;
+}
+.about-body-col {
+  grid-column: 4 / span 9;
+}
+@media (max-width: 900px) {
+  .about-side-col,
+  .about-body-col {
+    grid-column: 1 / -1;
+  }
+  .about-side-col {
+    margin-bottom: 32px;
+  }
+}
+.about-side .row {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.about-side .row:first-child {
+  border-top: 1px solid var(--line);
+}
+.about-side .label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.about-side .val {
+  margin-top: 4px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  overflow-wrap: anywhere;
+}
+.prose p {
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--ink-2);
+  letter-spacing: -0.01em;
+  max-width: 720px;
+}
+.prose p + p {
+  margin-top: 20px;
+}
+.focus {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+</style>

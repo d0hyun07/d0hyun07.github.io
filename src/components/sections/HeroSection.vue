@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BaseButton from '@/components/ui/BaseButton.vue'
 import { personal } from '@/data/personal'
 import { useTypingAnimation } from '@/composables/useTypingAnimation'
 
@@ -9,80 +8,202 @@ const { displayText } = useTypingAnimation(personal.role, {
   pauseAfterType: 1400,
 })
 
-function scrollToAbout() {
-  document
-    .getElementById('about')
-    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+function scrollTo(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 </script>
 
 <template>
-  <section
-    id="hero"
-    class="relative min-h-screen flex items-center bg-dot-grid overflow-hidden"
-    aria-label="소개"
-  >
-    <!-- 좌상단 액센트 그라데이션 (장식용) -->
-    <div
-      class="absolute -top-40 -left-40 w-[480px] h-[480px] rounded-full opacity-20 blur-3xl pointer-events-none"
-      style="background: radial-gradient(closest-side, var(--color-primary), transparent)"
-      aria-hidden="true"
-    />
+  <section id="hero" aria-label="소개">
+    <div class="page hero">
+      <div class="hero-left">
+        <div class="photo-frame">
+          <img src="/profile.jpg" alt="프로필 사진" />
+          <div class="photo-corner">PROFILE / 01</div>
+          <div class="photo-tag">{{ personal.name }} · DOHYUN KANG</div>
+        </div>
+      </div>
 
-    <div class="container-portfolio w-full relative z-10 py-24">
-      <div class="max-w-3xl">
-        <p class="font-mono text-sm text-[var(--color-text-muted)] mb-4">
-          $ whoami — 안녕하세요, 저는
-        </p>
+      <div class="hero-right">
+        <div>
+          <div class="eyebrow">
+            <span class="bar" aria-hidden="true" />
+            Portfolio · Spring {{ new Date().getFullYear() }}
+          </div>
 
-        <h1
-          class="font-mono text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-        >
-          <span class="text-[var(--color-primary)]">{{ personal.name }}</span
-          ><span class="text-[var(--color-text)]">.</span>
-        </h1>
+          <h1 class="hero-name">
+            <span class="ko">{{ personal.name }}</span>
+            <span class="en">Kang Dohyun</span>
+          </h1>
 
-        <div
-          class="font-mono text-xl md:text-2xl lg:text-3xl text-[var(--color-text)] mb-8 min-h-[2.5rem] flex items-center"
-        >
-          <span class="text-[var(--color-text-muted)] mr-2">&gt;</span>
-          <span aria-live="polite">{{ displayText }}</span>
-          <span
-            class="typing-cursor inline-block w-[3px] h-[1.1em] bg-[var(--color-primary)] ml-1 align-middle"
-            aria-hidden="true"
-          />
+          <div class="hero-role">
+            <span aria-live="polite">{{ displayText }}</span>
+          </div>
+
+          <p class="hero-lead">
+            {{ personal.bio }}
+          </p>
         </div>
 
-        <p
-          class="text-base md:text-lg text-[var(--color-text-muted)] mb-10 max-w-2xl leading-relaxed"
-        >
-          {{ personal.bio }}
-        </p>
+        <div>
+          <div class="hero-cta">
+            <a class="btn-primary" href="#projects" @click.prevent="scrollTo('projects')">
+              프로젝트 보기
+              <span class="arr" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M5 19 19 5 M9 5h10v10" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </a>
+            <a class="btn-ghost" :href="personal.github" target="_blank" rel="noreferrer">
+              GitHub
+              <span class="arr" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M5 19 19 5 M9 5h10v10" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </a>
+          </div>
 
-        <div class="flex flex-wrap gap-4">
-          <BaseButton variant="primary" href="#projects">
-            프로젝트 보기 →
-          </BaseButton>
-          <BaseButton
-            variant="ghost"
-            :href="personal.github"
-            target="_blank"
-            aria-label="GitHub 프로필 새 탭에서 열기"
-          >
-            GitHub ↗
-          </BaseButton>
+          <div class="hero-meta" aria-label="요약 정보">
+            <div class="cell">
+              <div class="k">Based in</div>
+              <div class="v">부산, 대한민국</div>
+            </div>
+            <div class="cell">
+              <div class="k">Email</div>
+              <div class="v">{{ personal.email }}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- 스크롤 안내 -->
-    <a
-      href="#about"
-      class="absolute bottom-8 left-1/2 -translate-x-1/2 text-[var(--color-text-dim)] hover:text-[var(--color-primary)] transition-colors"
-      aria-label="아래 About 섹션으로 스크롤"
-      @click.prevent="scrollToAbout"
-    >
-      <div class="font-mono text-xs animate-bounce">scroll ↓</div>
-    </a>
   </section>
 </template>
+
+<style scoped>
+.hero {
+  padding: 96px 0 110px;
+}
+
+.hero-left {
+  grid-column: 1 / span 5;
+}
+
+.hero-right {
+  grid-column: 7 / span 6;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 560px;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    padding: 56px 0 64px;
+  }
+  .hero-left,
+  .hero-right {
+    grid-column: 1 / -1;
+  }
+  .hero-right {
+    min-height: auto;
+    margin-top: 32px;
+    gap: 26px;
+  }
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow .bar {
+  width: 28px;
+  height: 1px;
+  background: var(--ink);
+}
+
+.hero-name {
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  font-size: clamp(68px, 10vw, 140px);
+  line-height: 0.92;
+  color: var(--ink);
+  margin: 22px 0 10px;
+}
+.hero-name .ko {
+  display: block;
+}
+.hero-name .en {
+  display: block;
+  font-weight: 300;
+  font-size: 0.26em;
+  color: var(--muted);
+  margin-top: 14px;
+  line-height: 1;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hero-role {
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--ink-2);
+  margin-top: 4px;
+}
+
+.hero-lead {
+  margin-top: 28px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  max-width: 520px;
+  letter-spacing: -0.005em;
+}
+
+.hero-cta {
+  margin-top: 32px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-primary .arr,
+.btn-ghost .arr {
+  transition: transform 0.2s ease;
+}
+.btn-primary:hover .arr,
+.btn-ghost:hover .arr {
+  transform: translate(2px, -2px);
+}
+
+.hero-meta {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px 24px;
+}
+.hero-meta .k {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.hero-meta .v {
+  font-size: 14.5px;
+  color: var(--ink-2);
+  letter-spacing: -0.005em;
+  font-weight: 500;
+}
+</style>

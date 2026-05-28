@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { RouterView } from 'vue-router'
 import { useActiveSection } from '@/composables/useActiveSection'
 import { personal } from '@/data/personal'
@@ -23,6 +24,12 @@ const { activeId } = useActiveSection(
   88,
 )
 
+const isTopbarScrolled = ref(false)
+
+function handleScroll() {
+  isTopbarScrolled.value = window.scrollY > 24
+}
+
 function handleNavClick(id: string, event: MouseEvent) {
   event.preventDefault()
   document
@@ -31,76 +38,65 @@ function handleNavClick(id: string, event: MouseEvent) {
 }
 
 const currentYear = computed(() => new Date().getFullYear())
+
+onMounted(() => {
+  handleScroll()
+  window.addEventListener('scroll', handleScroll, { passive: true })
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
   <!-- 스킵 링크 (스크린리더 / 키보드 접근성) -->
   <a
     href="#hero"
-    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[var(--color-primary)] focus:text-[var(--color-bg)] focus:rounded-md focus:font-mono focus:text-sm"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-[var(--ink)] focus:text-[var(--bg)] focus:rounded-md focus:text-sm"
     @click="handleNavClick('hero', $event)"
   >
     메인 콘텐츠로 건너뛰기
   </a>
 
   <!-- 글로벌 상단 네비게이션 -->
-  <header
-    class="fixed top-0 left-0 right-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-md"
-  >
-    <nav
-      class="container-portfolio flex items-center justify-between h-16 md:h-20"
-      aria-label="메인 네비게이션"
-    >
-      <!-- 로고 / 이름 -->
-      <a
-        href="#hero"
-        class="font-mono text-base md:text-lg font-bold text-[var(--color-text)] hover:text-[var(--color-primary)] transition-colors"
-        @click="handleNavClick('hero', $event)"
-      >
-        <span class="text-[var(--color-primary)]">&lt;</span>
-        {{ personal.name }}
-        <span class="text-[var(--color-primary)]"> /&gt;</span>
+  <header class="topbar" :class="{ scrolled: isTopbarScrolled }">
+    <div class="page topbar-inner" aria-label="메인 네비게이션">
+      <!-- 브랜드 -->
+      <a href="#hero" class="brand" @click="handleNavClick('hero', $event)">
+        <span class="brand-square" aria-hidden="true" />
+        <span>{{ personal.name }}</span>
+        <span class="brand-mini">Portfolio · {{ currentYear }}</span>
       </a>
 
       <!-- 섹션 링크 (Hero 제외) -->
-      <ul class="flex items-center gap-0.5 md:gap-1">
-        <li v-for="section in SECTIONS.slice(1)" :key="section.id">
-          <a
-            :href="`#${section.id}`"
-            class="block px-2 md:px-3 py-2 font-mono text-xs md:text-sm rounded-md transition-colors"
-            :class="
-              activeId === section.id
-                ? 'text-[var(--color-primary)] bg-[var(--color-primary-dim)]'
-                : 'text-[var(--color-text-muted)] hover:text-[var(--color-primary)]'
-            "
-            :aria-current="activeId === section.id ? 'location' : undefined"
-            @click="handleNavClick(section.id, $event)"
-          >
-            <span class="hidden sm:inline text-[var(--color-text-dim)] mr-1">
-              {{ String(SECTIONS.indexOf(section)).padStart(2, '0') }}.
-            </span>{{ section.label }}
-          </a>
-        </li>
-      </ul>
-    </nav>
+      <nav class="nav">
+        <a
+          v-for="(section, idx) in SECTIONS.slice(1)"
+          :key="section.id"
+          :href="`#${section.id}`"
+          :class="{ active: activeId === section.id }"
+          :aria-current="activeId === section.id ? 'location' : undefined"
+          @click="handleNavClick(section.id, $event)"
+        >
+          <span class="nav-num">{{ String(idx + 1).padStart(2, '0') }}</span>{{ section.label }}
+        </a>
+      </nav>
+    </div>
   </header>
 
   <!-- 메인 컨텐츠 -->
-  <main class="pt-16 md:pt-20">
+  <main :style="{ paddingTop: 'var(--topbar-h)' }">
     <RouterView />
   </main>
 
   <!-- 푸터 -->
-  <footer
-    class="border-t border-[var(--color-border)] py-8 mt-8"
-  >
-    <div class="container-portfolio flex flex-col md:flex-row items-center justify-between gap-3">
-      <p class="font-mono text-xs text-[var(--color-text-muted)]">
-        © {{ currentYear }} {{ personal.name }}. All rights reserved.
-      </p>
-      <p class="font-mono text-xs text-[var(--color-text-dim)]">
-        Built with Vue 3 · Vite · Tailwind CSS
-      </p>
+  <footer class="footer">
+    <div class="page">
+      <div class="footer-row">
+        <div>© {{ currentYear }} {{ personal.name }} · Kang Dohyun</div>
+        <div>Designed &amp; built in Busan</div>
+      </div>
     </div>
   </footer>
 </template>

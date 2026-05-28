@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
-import SectionTitle from '@/components/ui/SectionTitle.vue'
-import BaseButton from '@/components/ui/BaseButton.vue'
 import { personal } from '@/data/personal'
 import type { ContactStatus } from '@/types'
 
@@ -31,6 +29,9 @@ const status = ref<ContactStatus>('idle')
 const statusMessage = ref('')
 
 const isLoading = computed(() => status.value === 'loading')
+const githubShort = computed(() =>
+  personal.github.replace('https://', '').replace('http://', ''),
+)
 
 function validateEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -90,198 +91,262 @@ async function handleSubmit() {
 }
 
 const inputClass = computed(() => [
-  'w-full px-4 py-3 rounded-md font-sans text-sm md:text-base',
-  'bg-[var(--color-surface)] text-[var(--color-text)]',
-  'border border-[var(--color-border)]',
-  'focus:border-[var(--color-primary)] focus:outline-none',
-  'transition-colors duration-150',
-  'placeholder:text-[var(--color-text-dim)]',
+  'field-input',
 ])
 </script>
 
 <template>
   <section
     id="contact"
-    class="py-24"
+    class="section"
     aria-labelledby="contact-title"
   >
-    <div class="container-portfolio max-w-3xl">
-      <SectionTitle
-        id="contact-title"
-        title="Contact"
-        subtitle="협업 · 채용 · 기술 문의 모두 환영합니다. 보통 24시간 내 답장 드려요."
-        align="center"
-      />
-
-      <!-- 문의 폼 -->
-      <form
-        class="space-y-5"
-        novalidate
-        @submit.prevent="handleSubmit"
-      >
-        <!-- 이름 -->
-        <div>
-          <label
-            for="contact-name"
-            class="block font-mono text-xs text-[var(--color-text-muted)] mb-2 uppercase tracking-wider"
-          >
-            이름
-            <span class="text-[var(--color-error)]" aria-hidden="true">*</span>
-          </label>
-          <input
-            id="contact-name"
-            v-model="form.name"
-            type="text"
-            required
-            autocomplete="name"
-            :class="inputClass"
-            :aria-invalid="errors.name ? 'true' : 'false'"
-            :aria-describedby="errors.name ? 'contact-name-error' : undefined"
-            placeholder="홍길동"
-          />
-          <p
-            v-if="errors.name"
-            id="contact-name-error"
-            role="alert"
-            class="mt-1.5 text-xs text-[var(--color-error)]"
-          >
-            {{ errors.name }}
-          </p>
+    <div class="page">
+      <div class="sec-head">
+        <div class="sec-num-col">
+          <div class="sec-num"><span class="sec-dot" /> 05 — CONTACT</div>
         </div>
-
-        <!-- 이메일 -->
-        <div>
-          <label
-            for="contact-email"
-            class="block font-mono text-xs text-[var(--color-text-muted)] mb-2 uppercase tracking-wider"
-          >
-            이메일
-            <span class="text-[var(--color-error)]" aria-hidden="true">*</span>
-          </label>
-          <input
-            id="contact-email"
-            v-model="form.email"
-            type="email"
-            required
-            autocomplete="email"
-            :class="inputClass"
-            :aria-invalid="errors.email ? 'true' : 'false'"
-            :aria-describedby="errors.email ? 'contact-email-error' : undefined"
-            placeholder="you@example.com"
-          />
-          <p
-            v-if="errors.email"
-            id="contact-email-error"
-            role="alert"
-            class="mt-1.5 text-xs text-[var(--color-error)]"
-          >
-            {{ errors.email }}
-          </p>
+        <div class="sec-title-col">
+          <h2 id="contact-title" class="sec-title">연락하기</h2>
+          <p class="sec-sub">협업 · 채용 · 기술 문의 모두 환영합니다.</p>
         </div>
+      </div>
 
-        <!-- 메시지 -->
-        <div>
-          <label
-            for="contact-message"
-            class="block font-mono text-xs text-[var(--color-text-muted)] mb-2 uppercase tracking-wider"
-          >
-            메시지
-            <span class="text-[var(--color-error)]" aria-hidden="true">*</span>
-          </label>
-          <textarea
-            id="contact-message"
-            v-model="form.message"
-            required
-            rows="6"
-            :class="[inputClass, 'resize-y min-h-[160px]']"
-            :aria-invalid="errors.message ? 'true' : 'false'"
-            :aria-describedby="
-              errors.message ? 'contact-message-error' : undefined
-            "
-            placeholder="안녕하세요, 다음 내용으로 문의드립니다..."
-          />
-          <p
-            v-if="errors.message"
-            id="contact-message-error"
-            role="alert"
-            class="mt-1.5 text-xs text-[var(--color-error)]"
-          >
-            {{ errors.message }}
-          </p>
+      <div class="contact-left">
+        <div class="contact-big">
+          함께 만들고 싶은<br />
+          것이 있다면<br />
+          <span class="accent">편하게 말해주세요.</span>
         </div>
+        <p class="contact-sub">보통 24시간 안에 답장드립니다. 짧은 메모도 좋아요.</p>
 
-        <!-- 제출 버튼 -->
-        <div class="flex flex-col sm:flex-row sm:items-center gap-4 pt-2">
-          <BaseButton
-            type="submit"
-            variant="primary"
-            :disabled="isLoading"
-          >
-            {{ isLoading ? '전송 중...' : '메시지 보내기 →' }}
-          </BaseButton>
-
-          <!-- 상태 안내 (스크린리더 친화) -->
-          <p
-            v-if="statusMessage"
-            aria-live="polite"
-            aria-atomic="true"
-            class="font-mono text-sm"
-            :class="
-              status === 'success'
-                ? 'text-[var(--color-success)]'
-                : status === 'error'
-                  ? 'text-[var(--color-error)]'
-                  : 'text-[var(--color-text-muted)]'
-            "
-          >
-            {{ statusMessage }}
-          </p>
+        <div class="contact-links" aria-label="직접 연락 링크">
+          <a :href="`mailto:${personal.email}`">
+            <span class="label">Email</span>
+            <span class="value">{{ personal.email }}</span>
+            <span class="arr" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <path d="M5 19 19 5 M9 5h10v10" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </a>
+          <a :href="personal.github" target="_blank" rel="noreferrer">
+            <span class="label">GitHub</span>
+            <span class="value">{{ githubShort }}</span>
+            <span class="arr" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <path d="M5 19 19 5 M9 5h10v10" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </a>
         </div>
-      </form>
+      </div>
 
-      <!-- SNS / 직접 연락 -->
-      <div
-        class="mt-12 pt-10 border-t border-[var(--color-border)] text-center"
-      >
-        <p
-          class="font-mono text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-4"
-        >
-          또는 직접 연락
-        </p>
-        <ul class="flex flex-wrap justify-center gap-4 md:gap-6">
-          <li>
-            <a
-              :href="`mailto:${personal.email}`"
-              class="font-mono text-sm text-[var(--color-text)] hover:text-[var(--color-primary)] transition-colors"
-              :aria-label="`이메일 ${personal.email} 으로 보내기`"
-            >
-              ✉ {{ personal.email }}
-            </a>
-          </li>
-          <li>
-            <a
-              :href="personal.github"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="font-mono text-sm text-[var(--color-text)] hover:text-[var(--color-primary)] transition-colors"
-              aria-label="GitHub 프로필 새 탭에서 열기"
-            >
-              ⌥ GitHub
-            </a>
-          </li>
-          <li v-if="personal.linkedin">
-            <a
-              :href="personal.linkedin"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="font-mono text-sm text-[var(--color-text)] hover:text-[var(--color-primary)] transition-colors"
-              aria-label="LinkedIn 프로필 새 탭에서 열기"
-            >
-              in LinkedIn
-            </a>
-          </li>
-        </ul>
+      <div class="contact-right">
+        <form class="form" novalidate @submit.prevent="handleSubmit">
+          <div class="field">
+            <label for="contact-name">이름</label>
+            <input
+              id="contact-name"
+              v-model="form.name"
+              type="text"
+              required
+              autocomplete="name"
+              :class="inputClass"
+              :aria-invalid="errors.name ? 'true' : 'false'"
+              :aria-describedby="errors.name ? 'contact-name-error' : undefined"
+              placeholder="홍길동"
+            />
+            <p v-if="errors.name" id="contact-name-error" role="alert" class="err">
+              {{ errors.name }}
+            </p>
+          </div>
+
+          <div class="field">
+            <label for="contact-email">이메일</label>
+            <input
+              id="contact-email"
+              v-model="form.email"
+              type="email"
+              required
+              autocomplete="email"
+              :class="inputClass"
+              :aria-invalid="errors.email ? 'true' : 'false'"
+              :aria-describedby="errors.email ? 'contact-email-error' : undefined"
+              placeholder="you@example.com"
+            />
+            <p v-if="errors.email" id="contact-email-error" role="alert" class="err">
+              {{ errors.email }}
+            </p>
+          </div>
+
+          <div class="field">
+            <label for="contact-message">메시지</label>
+            <textarea
+              id="contact-message"
+              v-model="form.message"
+              required
+              rows="5"
+              :class="['field-input', 'textarea']"
+              :aria-invalid="errors.message ? 'true' : 'false'"
+              :aria-describedby="errors.message ? 'contact-message-error' : undefined"
+              placeholder="어떤 이야기를 나누고 싶으세요?"
+            />
+            <p v-if="errors.message" id="contact-message-error" role="alert" class="err">
+              {{ errors.message }}
+            </p>
+          </div>
+
+          <div class="submit-row">
+            <button class="btn-primary" type="submit" :disabled="isLoading">
+              {{ isLoading ? '전송 중...' : '메시지 보내기' }}
+              <span class="arr" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </button>
+            <p v-if="statusMessage" class="status" aria-live="polite" aria-atomic="true">
+              {{ statusMessage }}
+            </p>
+          </div>
+        </form>
       </div>
     </div>
   </section>
 </template>
+
+<style scoped>
+.contact-left {
+  grid-column: 1 / span 6;
+}
+.contact-right {
+  grid-column: 8 / span 5;
+}
+@media (max-width: 900px) {
+  .contact-left,
+  .contact-right {
+    grid-column: 1 / -1;
+  }
+  .contact-right {
+    margin-top: 48px;
+  }
+}
+
+.contact-big {
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-size: clamp(48px, 7vw, 96px);
+  color: var(--ink);
+}
+.contact-big .accent {
+  color: var(--accent);
+}
+.contact-sub {
+  margin-top: 22px;
+  max-width: 460px;
+  color: var(--ink-2);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+
+.contact-links {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+}
+.contact-links a {
+  display: grid;
+  grid-template-columns: 100px 1fr 24px;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  transition: padding 0.25s ease;
+}
+.contact-links a:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.contact-links a:hover {
+  padding-left: 8px;
+}
+.contact-links .label {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.contact-links .value {
+  font-size: 16px;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.contact-links .arr {
+  color: var(--muted-2);
+  transition: transform 0.25s;
+  justify-self: end;
+}
+.contact-links a:hover .arr {
+  transform: translate(4px, -4px);
+  color: var(--ink);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.field-input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line-strong);
+  padding: 10px 0;
+  font-size: 15.5px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.2s;
+  letter-spacing: -0.005em;
+  font-family: var(--sans);
+}
+.field-input::placeholder {
+  color: var(--muted-2);
+}
+.field-input:focus {
+  border-color: var(--ink);
+}
+.textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+.err {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--accent);
+}
+.submit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 8px;
+}
+.status {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+</style>

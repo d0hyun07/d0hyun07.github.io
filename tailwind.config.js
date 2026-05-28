@@ -13,7 +13,7 @@ export default {
           'monospace',
         ],
         sans: [
-          '"Noto Sans KR"',
+          '"Pretendard"',
           'system-ui',
           '-apple-system',
           '"Segoe UI"',
@@ -22,29 +22,27 @@ export default {
         ],
       },
       colors: {
-        // 디자인 시스템 색상 — CSS 변수를 Tailwind 유틸리티로 노출.
-        // 충돌 방지를 위해 'border' 키는 매핑하지 않고, 필요 시 bg-[var(--color-border)] 형태로 사용.
-        bg: 'var(--color-bg)',
-        surface: 'var(--color-surface)',
-        'surface-2': 'var(--color-surface-2)',
-        primary: 'var(--color-primary)',
-        'primary-dim': 'var(--color-primary-dim)',
-        secondary: 'var(--color-secondary)',
-        'text-base': 'var(--color-text)',
-        'text-muted': 'var(--color-text-muted)',
-        'text-dim': 'var(--color-text-dim)',
-        success: 'var(--color-success)',
-        warning: 'var(--color-warning)',
-        error: 'var(--color-error)',
+        // Editorial light tokens (CSS vars)
+        bg: 'var(--bg)',
+        'bg-2': 'var(--bg-2)',
+        'bg-card': 'var(--bg-card)',
+        ink: 'var(--ink)',
+        'ink-2': 'var(--ink-2)',
+        muted: 'var(--muted)',
+        'muted-2': 'var(--muted-2)',
+        line: 'var(--line)',
+        'line-strong': 'var(--line-strong)',
+        accent: 'var(--accent)',
+        'accent-soft': 'var(--accent-soft)',
       },
       maxWidth: {
-        container: '1200px',
+        container: '1240px',
       },
       transitionDuration: {
         DEFAULT: '300ms',
       },
       boxShadow: {
-        'glow-primary': '0 0 20px rgba(0, 212, 255, 0.25)',
+        // keep slot for any future usage
       },
     },
   },
