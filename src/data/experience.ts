@@ -46,6 +46,18 @@ export const education: Experience[] = [
   {
     id: 1,
     type: 'education',
+    period: '2025',
+    organization: '지멘스(Siemens) 공식 파트너',
+    role: 'Solution Developer 과정 이수',
+    description: [
+      'Teamcenter 기반 PLM 솔루션 개발 과정 이수',
+      'SOA Client·ITK(Integration Toolkit)를 활용한 Teamcenter 커스터마이징·연동 개발 학습',
+    ],
+    tags: ['Teamcenter', 'SOA Client', 'ITK'],
+  },
+  {
+    id: 2,
+    type: 'education',
     period: '2023.03 - 2026.01',
     organization: '부산소프트웨어마이스터고등학교',
     role: '소프트웨어개발과',
