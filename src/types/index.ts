@@ -29,6 +29,36 @@ export interface Project {
   featured?: boolean
 }
 
+export interface DetailTable {
+  headers: string[]
+  rows: string[][]
+}
+
+export interface DetailSection {
+  heading: string
+  body?: string[]
+  bullets?: string[]
+  table?: DetailTable
+}
+
+export interface ProjectLink {
+  label: string
+  url: string
+}
+
+/**
+ * 프로젝트 상세(모달)용 구조화 콘텐츠.
+ * 공개 사이트 노출 기준: 내부 식별자·엔드포인트·자격증명 정보는 포함하지 않는다.
+ */
+export interface ProjectDetail {
+  tagline?: string
+  status?: string
+  overview: string[]
+  sections: DetailSection[]
+  highlights?: string[]
+  links?: ProjectLink[]
+}
+
 export type SkillCategory =
   | 'frontend'
   | 'backend'

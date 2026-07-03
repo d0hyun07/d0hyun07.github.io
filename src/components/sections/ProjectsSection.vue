@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { projects } from '@/data/projects'
-import type { ProjectCategory } from '@/types'
+import type { Project, ProjectCategory } from '@/types'
 import { useScrollReveal } from '@/composables/useScrollReveal'
+import ProjectModal from '@/components/ui/ProjectModal.vue'
 
 type FilterKey = 'all' | ProjectCategory
 
@@ -11,13 +12,7 @@ interface Filter {
   label: string
 }
 
-const filters: Filter[] = [
-  { key: 'all', label: '전체' },
-  { key: 'web', label: '웹' },
-  { key: 'security', label: '보안' },
-  { key: 'robotics', label: '로봇' },
-  { key: 'embedded', label: '임베디드' },
-]
+const filters: Filter[] = [{ key: 'all', label: '전체' }]
 
 const activeFilter = ref<FilterKey>('all')
 
@@ -39,6 +34,16 @@ const visibleProjects = computed(() => {
 
 function handleFilter(key: FilterKey) {
   activeFilter.value = key
+}
+
+const selectedProject = ref<Project | null>(null)
+
+function openProject(project: Project) {
+  selectedProject.value = project
+}
+
+function closeProject() {
+  selectedProject.value = null
 }
 
 function categoryLabel(category: ProjectCategory): string {
@@ -111,15 +116,15 @@ const { isVisible, target } = useScrollReveal()
 
       <div class="work-area">
         <div class="project-list">
-          <a
+          <button
             v-for="(project, i) in visibleProjects"
             :key="project.id"
+            type="button"
             class="project reveal"
             :class="{ visible: isVisible }"
             :style="{ transitionDelay: `${Math.min(i * 60, 400)}ms` }"
-            :href="project.githubUrl || project.demoUrl || undefined"
-            :target="project.githubUrl || project.demoUrl ? '_blank' : undefined"
-            rel="noreferrer"
+            :aria-label="`${project.title} 상세 보기`"
+            @click="openProject(project)"
           >
             <div class="year">
               {{ String(project.id).padStart(2, '0') }}
@@ -153,7 +158,7 @@ const { isVisible, target } = useScrollReveal()
                 <path d="M5 19 19 5 M9 5h10v10" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </div>
-          </a>
+          </button>
         </div>
 
         <p
@@ -164,6 +169,8 @@ const { isVisible, target } = useScrollReveal()
         </p>
       </div>
     </div>
+
+    <ProjectModal :project="selectedProject" @close="closeProject" />
   </section>
 </template>
 
@@ -222,8 +229,14 @@ const { isVisible, target } = useScrollReveal()
   grid-template-columns: 70px 3fr 4fr 2fr 24px;
   gap: 24px;
   align-items: start;
-  padding: 28px 0;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
   border-bottom: 1px solid var(--line);
+  padding: 28px 0;
   cursor: pointer;
   transition: padding 0.25s ease, background 0.25s ease;
 }
