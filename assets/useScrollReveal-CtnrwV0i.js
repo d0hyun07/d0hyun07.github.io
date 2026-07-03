@@ -1,0 +1,1 @@
+import{C as e,j as t,w as n}from"./vendor-B61HyZFN.js";function r(r=.15){let i=t(!1),a=t(null),o=null;return e(()=>{if(typeof IntersectionObserver>`u`){i.value=!0;return}o=new IntersectionObserver(e=>{e[0]?.isIntersecting&&(i.value=!0,o?.disconnect(),o=null)},{threshold:r}),a.value&&o.observe(a.value)}),n(()=>{o?.disconnect(),o=null}),{isVisible:i,target:a}}export{r as t};
